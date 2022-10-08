@@ -11,13 +11,13 @@ import jissa_file
 
 
 def login():
-    driver.get(os.getenv("url"))
+    driver.get(os.getenv("URL"))
 
     user_name = driver.find_element(By.NAME, "username")
-    user_name.send_keys(os.getenv("user_name"))
+    user_name.send_keys(os.getenv("USER_NAME"))
 
     password = driver.find_element(By.NAME, "password")
-    password.send_keys(os.getenv("password"))
+    password.send_keys(os.getenv("PASSWORD"))
 
     loggin = driver.find_element(By.XPATH, "/html/body/form/input[2]")
     loggin.click()
@@ -107,7 +107,7 @@ if __name__ == "__main__":
     load_dotenv()
 
     file_type = [("Excel File", "*.xlsx")]
-    base_dir = os.getenv("base_dir")
+    base_dir = os.getenv("init_dir")
     file_path = filedialog.askopenfilename(filetypes=file_type, initialdir=base_dir)
 
     if file_path != "":
