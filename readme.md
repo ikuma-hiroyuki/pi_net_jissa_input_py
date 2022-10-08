@@ -9,10 +9,10 @@ PI-Netの実査数入力を自動化します。
 1. main.pyと同じ階層にesedgedriver.exeを配置する
    [Microsoft Edge WebDriver - Microsoft Edge Developer](https://developer.microsoft.com/ja-jp/microsoft-edge/tools/webdriver/)
 2. main.pyと同じ階層に.envファイルを作成し、以下を記述する
-   url=対象のURL
-   base_dir=規定で開くフォルダ
-   user_name=pi-netのユーザー名
-   password=pi-netのパスワード
+   URL=対象のURL
+   INIT_DIR=規定で開くフォルダ
+   USER_NAME=pi-netのユーザー名
+   PASSWORD=pi-netのパスワード
 3. main.pyを実行する
    対象の実査登録確認リスト(xlsx)をダイアログで選択する
 
