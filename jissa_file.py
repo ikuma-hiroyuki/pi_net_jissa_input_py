@@ -12,7 +12,7 @@ class JissaFile:
         self.ws = self.wb.sheets.active
         self.is_paid = "(有)" in self.wb.name
 
-    def get_jissa_su(self, zuban: str) -> float:
+    def get_inventory_quantity(self, zuban: str) -> float:
         """
         実査登録確認リストを検索し、発見したらセルを黄色く塗り、実査数を返す
         :param zuban: 検索対象図番
