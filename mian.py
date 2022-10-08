@@ -59,7 +59,7 @@ def change_to_input_frame():
         pay_category.select_by_value("L")
 
 
-def click_screen_update_button():
+def display_update():
     """
     画面右上の検索/更新ボタンを実行する
     """
@@ -100,7 +100,7 @@ def input_inventory_quantity() -> bool:
         return parts_no != ""
 
 
-def click_next_page():
+def display_next_page():
     driver.execute_script("javascript:return top.frSubMenu.clickNextPage();")
 
 
@@ -119,9 +119,9 @@ if __name__ == "__main__":
 
         login()
         change_to_input_frame()
-        click_screen_update_button()
+        display_update()
         while input_inventory_quantity():
-            click_next_page()
+            display_next_page()
 
         os.kill(driver.service.process.pid, signal.SIGTERM)
         messagebox.showinfo("PI-NET実査数入力", "終了")
