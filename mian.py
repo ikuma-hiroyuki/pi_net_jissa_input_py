@@ -13,14 +13,14 @@ import jissa_file
 def login():
     driver.get(os.getenv("url"))
 
-    user_name_box = driver.find_element(By.NAME, "username")
-    user_name_box.send_keys(os.getenv("user_name"))
+    user_name = driver.find_element(By.NAME, "username")
+    user_name.send_keys(os.getenv("user_name"))
 
-    password_box = driver.find_element(By.NAME, "password")
-    password_box.send_keys(os.getenv("password"))
+    password = driver.find_element(By.NAME, "password")
+    password.send_keys(os.getenv("password"))
 
-    loggin_button = driver.find_element(By.XPATH, "/html/body/form/input[2]")
-    loggin_button.click()
+    loggin = driver.find_element(By.XPATH, "/html/body/form/input[2]")
+    loggin.click()
 
 
 def change_to_input_frame():
@@ -67,29 +67,36 @@ def click_screen_update_button():
     driver.execute_script("javascript:clickButton(''); return top.frSubMenu.clickExecute();")
 
 
-def input_jissa_su() -> bool:
+def input_inventory_quantity() -> bool:
     """
     pinetの対象図番を実査登録確認リストから取得し、実査数をpinetに入力する。
     図番がなくなったら終了し、Falseを返す
     :return: bool
     """
-    zuban = ""
+    parts_no = ""
     for row in range(2, 16):
-        zuban_td = driver.find_element(By.XPATH, f"/html/body/form/table[7]/tbody/tr[{row}]/td[2]")
-        zuban = zuban_td.text.strip()
+        parts_no = driver.find_element(By.XPATH, f"/html/body/form/table[7]/tbody/tr[{row}]/td[2]").text.strip()
 
-        if zuban == "":
+        if parts_no == "":
             break
 
-        jissa_su: float = jissa.get_jissa_su(zuban)
-        if jissa_su is not None:
-            zaikosu = driver.find_element(By.XPATH, f"/html/body/form/table[7]/tbody/tr[{row}]/td[8]/input")
-            zaikosu.clear()
-            zaikosu.send_keys(jissa_su)
+        inventory_quantity: float = jissa.get_inventory_quantity(parts_no)
+        if inventory_quantity is not None:
+            month_end_stock = driver.find_element(By.XPATH, f"/html/body/form/table[7]/tbody/tr[{row}]/td[8]/input")
+            month_end_stock.clear()
+            month_end_stock.send_keys(inventory_quantity)
 
             checkbox = driver.find_element(By.XPATH, f"/html/body/form/table[7]/tbody/tr[{row}]/td[1]/input[2]")
             driver.execute_script("arguments[0].click();", checkbox)
-    return zuban != ""
+
+    # todo 在庫報告
+
+    # 99ページまでしか表示されないので到達したらFalseを返す
+    page_display = driver.find_element(By.XPATH, '/html/body/form/table[2]/tbody/tr/td[1]')
+    if page_display.text == "PAPSP 99":
+        return False
+    else:
+        return parts_no != ""
 
 
 def click_next_page():
@@ -112,8 +119,8 @@ if __name__ == "__main__":
         login()
         change_to_input_frame()
         click_screen_update_button()
-        while input_jissa_su():
+        while input_inventory_quantity():
             click_next_page()
 
         os.kill(driver.service.process.pid, signal.SIGTERM)
-        messagebox.showinfo("PI-NET実査数入力", "完了")
+        messagebox.showinfo("PI-NET実査数入力", "終了")
