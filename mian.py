@@ -70,7 +70,8 @@ def click_screen_update_button():
 def input_inventory_quantity() -> bool:
     """
     pinetの対象図番を実査登録確認リストから取得し、実査数をpinetに入力する。
-    図番がなくなったら終了し、Falseを返す
+    図番がなくるもしくは、99ページに到達したらFalseを返す。
+    それ以外はTrueを返す。
     :return: bool
     """
     parts_no = ""
