@@ -89,8 +89,11 @@ def input_inventory_quantity() -> bool:
 
             checkbox = driver.find_element(By.XPATH, f"/html/body/form/table[7]/tbody/tr[{row}]/td[1]/input[2]")
             driver.execute_script("arguments[0].click();", checkbox)
+        else:
+            not_found_zuban_list.append(parts_no)
 
-    # todo 在庫報告
+    # 在庫報告ボタン
+    driver.execute_script("javascript:top.frSubMenu.submitOnXXAID('5');")
 
     # 99ページまでしか表示されないので到達したらFalseを返す
     page_display = driver.find_element(By.XPATH, '/html/body/form/table[2]/tbody/tr/td[1]')
@@ -100,15 +103,13 @@ def input_inventory_quantity() -> bool:
         return parts_no != ""
 
 
-def display_next_page():
-    driver.execute_script("javascript:return top.frSubMenu.clickNextPage();")
-
-
 if __name__ == "__main__":
     load_dotenv()
 
+    not_found_zuban_list = []
+
     file_type = [("Excel File", "*.xlsx")]
-    base_dir = os.getenv("init_dir")
+    base_dir = os.getenv("INIT_DIR")
     file_path = filedialog.askopenfilename(filetypes=file_type, initialdir=base_dir)
 
     if file_path != "":
@@ -120,8 +121,14 @@ if __name__ == "__main__":
         login()
         change_to_input_frame()
         display_update()
-        while input_inventory_quantity():
-            display_next_page()
+        while input_inventory_quantity():  # 1ページごと入力して報告
+            pass
+            # テスト用(在庫報告ボタンを押すと次ページが表示されるので不要)
+            # driver.execute_script("javascript:return top.frSubMenu.clickNextPage();")
 
         os.kill(driver.service.process.pid, signal.SIGTERM)
         messagebox.showinfo("PI-NET実査数入力", "終了")
+
+        if len(not_found_zuban_list) > 0:
+            with open("notfound.csv", "a", encoding="UTF-8") as file:
+                file.writelines(not_found_zuban_list)
