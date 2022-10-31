@@ -48,8 +48,8 @@ def change_to_input_frame():
     kouku.send_keys("18A")
 
     # ステータスを在庫未報告にする
-    status = Select(driver.find_element(By.NAME, "HYOUJI"))
-    status.select_by_value("V")
+    # status = Select(driver.find_element(By.NAME, "HYOUJI"))
+    # status.select_by_value("V")
 
     # 支給区分を切り替える
     pay_category = Select(driver.find_element(By.NAME, "KEYUMU"))
@@ -86,12 +86,16 @@ def input_inventory_quantity() -> bool:
             month_end_stock = driver.find_element(By.XPATH, f"/html/body/form/table[7]/tbody/tr[{row}]/td[8]/input")
             month_end_stock.clear()
             month_end_stock.send_keys(inventory_quantity)
-
-            checkbox = driver.find_element(By.XPATH, f"/html/body/form/table[7]/tbody/tr[{row}]/td[1]/input[2]")
-            driver.execute_script("arguments[0].click();", checkbox)
         else:
             not_found_zuban_list.append(parts_no)
 
+    # チェックボックスをオンにしてから右上の更新ボタンを押して在庫報告
+    for row in range(2, 16):
+        checkbox = driver.find_element(By.XPATH, f"/html/body/form/table[7]/tbody/tr[{row}]/td[1]/input[2]")
+        driver.execute_script("arguments[0].click();", checkbox)
+
+    # 検索/更新ボタン
+    driver.execute_script("javascript:clickButton(''); return top.frSubMenu.clickExecute();")
     # 在庫報告ボタン
     driver.execute_script("javascript:top.frSubMenu.submitOnXXAID('5');")
 
