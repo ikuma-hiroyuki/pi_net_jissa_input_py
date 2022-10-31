@@ -48,8 +48,8 @@ def change_to_input_frame():
     kouku.send_keys("18A")
 
     # ステータスを在庫未報告にする
-    # status = Select(driver.find_element(By.NAME, "HYOUJI"))
-    # status.select_by_value("V")
+    status = Select(driver.find_element(By.NAME, "HYOUJI"))
+    status.select_by_value("V")
 
     # 支給区分を切り替える
     pay_category = Select(driver.find_element(By.NAME, "KEYUMU"))
@@ -134,6 +134,6 @@ if __name__ == "__main__":
         messagebox.showinfo("PI-NET実査数入力", "終了")
 
         if len(not_found_zuban_list) > 0:
-            with open("notfound.csv", "a", encoding="UTF-8") as file:
+            with open("notfound.csv", "w", encoding="UTF-8") as file:
                 file.writelines(not_found_zuban_list)
                 messagebox.showinfo("見つからなかった部品があります。", "要確認")
