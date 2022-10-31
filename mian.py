@@ -136,3 +136,4 @@ if __name__ == "__main__":
         if len(not_found_zuban_list) > 0:
             with open("notfound.csv", "a", encoding="UTF-8") as file:
                 file.writelines(not_found_zuban_list)
+                messagebox.showinfo("見つからなかった部品があります。", "要確認")
