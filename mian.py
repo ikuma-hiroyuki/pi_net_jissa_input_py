@@ -86,13 +86,11 @@ def input_inventory_quantity() -> bool:
             month_end_stock = driver.find_element(By.XPATH, f"/html/body/form/table[7]/tbody/tr[{row}]/td[8]/input")
             month_end_stock.clear()
             month_end_stock.send_keys(inventory_quantity)
+
+            checkbox = driver.find_element(By.XPATH, f"/html/body/form/table[7]/tbody/tr[{row}]/td[1]/input[2]")
+            driver.execute_script("arguments[0].click();", checkbox)
         else:
             not_found_zuban_list.append(parts_no)
-
-    # チェックボックスをオンにしてから右上の更新ボタンを押して在庫報告
-    for row in range(2, 16):
-        checkbox = driver.find_element(By.XPATH, f"/html/body/form/table[7]/tbody/tr[{row}]/td[1]/input[2]")
-        driver.execute_script("arguments[0].click();", checkbox)
 
     # 検索/更新ボタン
     driver.execute_script("javascript:clickButton(''); return top.frSubMenu.clickExecute();")
@@ -102,7 +100,7 @@ def input_inventory_quantity() -> bool:
     # 99ページまでしか表示されないので到達したらFalseを返す
     page_display = driver.find_element(By.XPATH, '/html/body/form/table[2]/tbody/tr/td[1]')
     if page_display.text == "PAPSP 99":
-        return False
+        return False  # 動作確認
     else:
         return parts_no != ""
 
