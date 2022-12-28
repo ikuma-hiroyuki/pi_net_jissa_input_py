@@ -99,8 +99,8 @@ def input_inventory_quantity() -> bool:
 
     # 99ページまでしか表示されないので到達したらFalseを返す
     page_display = driver.find_element(By.XPATH, '/html/body/form/table[2]/tbody/tr/td[1]')
-    if page_display.text == "PAPSP 99":
-        return False  # 動作確認
+    if "PAPSP 99" in page_display.text:
+        return False
     else:
         return parts_no != ""
 
