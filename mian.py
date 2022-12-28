@@ -117,21 +117,27 @@ if __name__ == "__main__":
     if file_path != "":
         jissa = jissa_file.JissaFile(file_path)
 
-        driver = webdriver.Edge()
-        driver.implicitly_wait(10)
+        try:
+            driver = webdriver.Edge()
+        except Exception as e:
+            print(e)
+            messagebox.showerror("エラー", "Edgeのドライバーが見つかりません。")
+            exit(1)
+        else:
+            driver.implicitly_wait(10)
 
-        login()
-        change_to_input_frame()
-        display_update()
-        while input_inventory_quantity():  # 1ページごと入力して報告
-            pass
-            # テスト用(在庫報告ボタンを押すと次ページが表示されるので不要)
-            # driver.execute_script("javascript:return top.frSubMenu.clickNextPage();")
+            login()
+            change_to_input_frame()
+            display_update()
+            while input_inventory_quantity():  # 1ページごと入力して報告
+                pass
+                # テスト用(在庫報告ボタンを押すと次ページが表示されるので不要)
+                # driver.execute_script("javascript:return top.frSubMenu.clickNextPage();")
 
-        os.kill(driver.service.process.pid, signal.SIGTERM)
-        messagebox.showinfo("PI-NET実査数入力", "終了")
+            os.kill(driver.service.process.pid, signal.SIGTERM)
+            messagebox.showinfo("PI-NET実査数入力", "終了")
 
-        if len(not_found_zuban_list) > 0:
-            with open("notfound.csv", "w", encoding="UTF-8") as file:
-                file.writelines(not_found_zuban_list)
-                messagebox.showinfo("見つからなかった部品があります。", "要確認")
+            if len(not_found_zuban_list) > 0:
+                with open("notfound.csv", "w", encoding="UTF-8") as file:
+                    file.writelines(not_found_zuban_list)
+                    messagebox.showinfo("見つからなかった部品があります。", "要確認")
